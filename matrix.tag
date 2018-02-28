@@ -1,6 +1,6 @@
 <cell-view>
 	<span draggable="true" ondragstart={dragStarted} ondrag={dragged} ondragend={dragEnded}>
-		{matrix[i].toFixed(2)}
+		<strong>{matrix[i].toFixed(2)}</strong>
 	</span>
 
 	<script>
@@ -25,7 +25,7 @@
 
 <matrix-xformer>
 	<span draggable="true" ondragstart={dragStarted} ondrag={dragged} ondragend={dragEnded}>
-		{text}
+		<strong>{text}</strong>
 	</span>
 
 	<script>
@@ -52,7 +52,11 @@
 </matrix-xformer>
 
 <matrix-view>
-	<matrix-xformer matrix={matrix} xform={rotate} scrubamt={0.01} text="Rotate"></matrix-xformer>
+	<p>
+		Click and drag anything in bold to change the value:
+	</p>
+
+	<matrix-xformer matrix={matrix} xform={rotate} scrubamt={0.01} text="Rotation"></matrix-xformer>
 	<matrix-xformer matrix={matrix} xform={scale} scrubamt={0.1} text="Scale"></matrix-xformer>
 
 	<div>
@@ -73,7 +77,8 @@
 			<span>1.00</span>
 		</span><br/>
 		<button onclick={reset}>Reset</button>
-		<button onclick={update}>Update</button>
+		<!--<button onclick={update}>Update</button>-->
+		<button onclick={randomize}>Randomize</button>
 	</div>
 
 	<script>
@@ -83,6 +88,13 @@
 
 		reset() {
 			mat2d.identity(this.matrix);
+		}
+
+		randomize() {
+			this.matrix[0] = random(-1, 1);
+			this.matrix[1] = random(-1, 1);
+			this.matrix[2] = random(-1, 1);
+			this.matrix[3] = random(-1, 1);
 		}
 
 		rotate(m, m_old, amt) {

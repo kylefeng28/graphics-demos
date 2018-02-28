@@ -7,6 +7,7 @@ function applyGlMatrix(m) {
 	applyMatrix(...m);
 }
 
+let canvas;
 let img;
 
 function preload() {
@@ -15,7 +16,8 @@ function preload() {
 }
 
 function setup() {
-	createCanvas(500, 500);
+	canvas = createCanvas(500, 500);
+	canvas.parent('canvas-container');
 }
 
 function draw() {
