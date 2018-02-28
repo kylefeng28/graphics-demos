@@ -36,14 +36,17 @@
 
 		dragStarted(e) {
 			this.x0 = e.clientX;
+			this.y0 = e.clientY;
 			this.matrix_old = mat2d.clone(this.matrix);
 		}
 
 		dragged(e) {
 			if (e.clientX > 0) {
 				let dx = e.clientX - this.x0;
-				let amt = (dx / 10) * this.scrubamt;
-				this.xform(this.matrix, this.matrix_old, amt);
+				let dy = e.clientY - this.y0;
+				let amtx = (dx / 10) * this.scrubamt;
+				let amty = (dy / 10) * this.scrubamt;
+				this.xform(this.matrix, this.matrix_old, amtx, amty);
 			}
 			this.parent.update();
 		}
@@ -58,6 +61,7 @@
 
 	<matrix-xformer matrix={matrix} xform={rotate} scrubamt={0.01} text="Rotation"></matrix-xformer>
 	<matrix-xformer matrix={matrix} xform={scale} scrubamt={0.1} text="Scale"></matrix-xformer>
+	<matrix-xformer matrix={matrix} xform={translate} scrubamt={10} text="Translation"></matrix-xformer>
 
 	<div>
 		<!--TODO settranslate, rotate, etc-->
@@ -103,6 +107,11 @@
 
 		scale(m, m_old, amt) {
 			mat2d.scale(m, m_old, [ 1+amt, 1+amt ]);
+		}
+
+		translate(m, m_old, amtx, amty) {
+		    console.log(amtx, amty);
+			mat2d.translate(m, m_old, [amtx, amty]);
 		}
 
 	</script>
