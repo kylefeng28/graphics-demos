@@ -1,5 +1,8 @@
 <cell-view>
-	<span draggable="true" ondragstart={dragStarted} ondrag={dragged} ondragend={dragEnded}>
+	<span draggable="true"
+	   ref="span"
+	   ondragstart={dragStarted} ondrag={dragged}
+		>
 		<strong>{matrix[i].toFixed(2)}</strong>
 	</span>
 
@@ -7,6 +10,25 @@
 		this.matrix = opts.matrix;
 		this.i = opts.i;
 		this.scrubamt = opts.scrubamt || 0.1;
+
+		this.on('mount', function() {
+			this.refs.span.addEventListener('touchstart', this.touchStarted, false);
+			this.refs.span.addEventListener('touchmove', this.touchMoved, false);
+		});
+
+		touchStarted(e) {
+			this.x0 = parseInt(this.changedTouches[0].clientX);
+			this.matrix_old = mat2d.clone(this.matrix);
+			e.preventDefault();
+		}
+
+		touchMoved(e) {
+			// if (e.clientX > 0) {
+				let dx = parseInt(e.changedTouches[0].clientX) - this.x0;
+				this.matrix[this.i] = this.matrix_old[this.i] + (dx / 10) * this.scrubamt;
+			// }
+			e.preventDefault();
+		}
 
 		dragStarted(e) {
 			this.x0 = e.clientX;

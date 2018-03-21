@@ -6,8 +6,6 @@
 		<title>Matrices!</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css"/>
 
-		<!--TODO IE-Edge stuff?-->
-
 		<!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.5/es5-shim.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -22,29 +20,31 @@
 
 		<script type="riot/tag" src="matrix.tag"></script>
 
-		<div class="container">
-			<h1 class="title">
-				Matrices
-			</h1>
-			<!--
-			<p class="subtitle">
-				The heart of linear algebra
-			</p>
-			-->
+		<section class="section">
+			<div class="container">
+				<h1 class="title">
+					Matrices
+				</h1>
+				<!--
+				<p class="subtitle">
+					The heart of linear algebra
+				</p>
+				-->
 
 
-			<div class="has-text-centered">
-				<p>Check out <a href="http://ncase.me/matrix/">Nicky Case's excellent matrix demo!</a></p>
-				<br/>
-	
-				<matrix-view></matrix-view>
+				<div class="has-text-centered">
+					<p>Check out <a href="http://ncase.me/matrix/">Nicky Case's excellent matrix demo!</a></p>
+					<br/>
+
+					<matrix-view></matrix-view>
+				</div>
+
+				<div id="canvas-container" class="has-text-centered">
+				</div>
 			</div>
-	
-			<div id="canvas-container" class="has-text-centered">
-			</div>
-		</div>
+		</section>
 
-		<script src="matrix.js"></script>
+		<script src="main.js"></script>
 
 	</body>
 </html>

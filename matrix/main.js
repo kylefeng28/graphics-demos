@@ -11,8 +11,8 @@ let canvas;
 let img;
 
 function preload() {
-	// img = loadImage('spock.png');
-	img = loadImage('img/cirno.jpg');
+	// img = loadImage('./img/spock.png');
+	img = loadImage('./img/cirno.jpg');
 }
 
 function setup() {
