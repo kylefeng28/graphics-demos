@@ -22,8 +22,10 @@ function setup() {
 
 function draw() {
 	// Lerp
-	for (let i = 0; i < 6; i++) {
-		matrix_[i] = lerp(matrix_[i], matrix[i], 0.1);
+	if (!mat2d.equals(matrix_, matrix)) {
+		for (let i = 0; i < 6; i++) {
+			matrix_[i] = lerp(matrix_[i], matrix[i], 0.1);
+		}
 	}
 
 	// Center

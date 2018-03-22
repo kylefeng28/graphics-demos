@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<title>Kyle's Graphics Demos</title>
+		<title>Graphics playground</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css"/>
 
 		<!--[if lt IE 9]>
@@ -13,27 +13,22 @@
 	</head>
 	<body>
 
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
+
 		<section class="section">
 			<div class="container">
 				<h1 class="title">
-					Kyle's Graphics Demos
+					Graphics playground
 				</h1>
 
-				<p>These are some demos I made for my 2D graphics class, <a href="http://wwwx.cs.unc.edu/Courses/comp475-s18/">COMP 475 at UNC-Chapel Hill</a>, taught by graphics expert Mike Reed.</p>
-
-				<br>
-
-				<p>Hopefully these will be of some use to someone!</p>
-
-				<br/>
-
-				<ul>
-					<li><a href="./matrix">Matrices</a></li>
-					<li><a href="./playground">GCanvas Playground</a></li>
-				</ul>
-
+				<div id="canvas-container" class="has-text-centered">
+				</div>
 			</div>
 		</section>
+
+		<script src="GCanvas.js"></script>
+		<script src="main.js"></script>
 
 	</body>
 </html>
