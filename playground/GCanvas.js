@@ -36,6 +36,19 @@ class GRect {
 	}
 }
 
+// Not a real shader, as in it doesn't use OpenGL or a PShader
+class TextureShader extends GShader {
+	constructor(imgLoc) {
+		super(null);
+		this.img = canvas._p5.loadImage(imgLoc);
+	}
+
+	use(canvas) {
+		console.log(canvas);
+		canvas.texture(this.img);
+	}
+}
+
 class MandelbrotShader extends GShader {
 	constructor() {
 		const vs = `
@@ -161,7 +174,8 @@ class GCanvas {
 
 		this._applyMatrix();
 
-		this._p5.push();
+		this._getCanvas().push();
+		this._getCanvas().translate(-this._getCanvas().width/2, -this._getCanvas().height/2);
 
 		if (shader) {
 			shader.use(this._getCanvas());
@@ -179,7 +193,7 @@ class GCanvas {
 		this._getCanvas().vertex(rect.left, rect.bottom, 0)
 		this._getCanvas().endShape();
 
-		this._p5.pop();
+		this._getCanvas().pop();
 	}
 
 	// drawConvexPolygon(points, paint) override {
@@ -359,6 +373,7 @@ class GCanvas {
 
 	clear() {
 		this._getCanvas().clear();
+		this._getCanvas().background(200);
 		this.resetCtm();
 	}
 

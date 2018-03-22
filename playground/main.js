@@ -1,6 +1,34 @@
 'use strict';
 
+// Init canvas
 let canvas = new GCanvas(500, 500);
+
+// Init Ace editor
+let editor = ace.edit("editor");
+editor.setTheme("ace/theme/monokai");
+editor.session.setMode("ace/mode/javascript");
+
+// Load
+readFromLocalStorage(editor);
+
+/* Keybindings */
+// Save keybinding
+editor.commands.addCommand({
+	name: 'save',
+	exec: function() {
+		saveToLocalStorage(editor);
+	},
+	bindKey: { mac: 'Cmd-S', win: 'Ctrl-S' }
+});
+
+// Eval keybinding
+editor.commands.addCommand({
+	name: 'eval',
+	exec: function() {
+		evalSelectionOrLine(editor);
+	},
+	bindKey: { mac: 'Cmd-Enter', win: 'Ctrl-Enter' }
+});
 
 function test1() {
 	canvas.drawRect(new GRect(50, 50, 100, 100), new GPaint("#0095DD"));
