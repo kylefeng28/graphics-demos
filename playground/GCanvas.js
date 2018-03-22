@@ -36,18 +36,47 @@ class GRect {
 class BitmapShader extends GShader {
 	constructor(imgLoc) {
 		super();
-		this.img = canvas._p5.loadImage(imgLoc);
+		let self = this;
+		//this.promise = new Promise((resolve, reject) => {
+			self.img = canvas._p5.loadImage(imgLoc, (img) => {
+				self.imgData = img.canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+				self.imgData = new Uint32Array(self.imgData); // Uint8Array?
+				//resolve();
+				console.log('BitmapShader: image loaded');
+			});
+		//})
 	}
 
 	// setContext(ctm) {}
-	shadeRow(x, y, count, row) {
-		const imageData = this.img.canvas.getContext('2d').getImageData(x, y, count, 1).data;
+	async shadeRow(x, y, count, row) {
+		// await this.promise;
+		if (!this.imgData) {
+			console.log('BitmapShader: image not loaded yet');
+			return;
+		}
+
+		// TODO optimize
 		for (let i = 0; i < count; i++) {
-			const r = imageData[4*i];
-			const g = imageData[4*i+1];
-			const b = imageData[4*i+2];
-			const a = imageData[4*i+3];
+			const j = y * this.img.width + (x + i);
+			const r = this.imgData[4*j];
+			const g = this.imgData[4*j+1];
+			const b = this.imgData[4*j+2];
+			const a = this.imgData[4*j+3];
 			row[i] = `rgba(${r},${g},${b},${a})`;
+		}
+	}
+}
+
+class RedGreenSwapFilter extends GFilter {
+	filter(outRow, inRow, count) {
+		for (let i = 0; i < count; i++) {
+			let color = inRow[i];
+			// Swap red and green
+			outRow[i] = canvas._p5.color(
+				canvas._p5.green(color),
+				canvas._p5.red(color),
+				canvas._p5.blue(color)
+			);
 		}
 	}
 }
@@ -126,6 +155,32 @@ class GCanvas {
 
 		// TODO this is too much magic
 		this._applyMatrix();
+
+		// More magic
+		// and hacks
+		if (shader instanceof BitmapShader) {
+			// Create canvas
+			let g = this._p5.createGraphics(rect.width(), rect.height());
+
+			// Draw image
+			g.image(shader.img, rect.left, rect.top);
+
+			// Filter
+			if (filter) {
+				for (let y = rect.top; y < rect.bottom; y++) {
+					for (let x = rect.left; x < rect.right; x++) {
+						let p = g.get(x, y);
+						filter.filter([p], [p], 1);
+						g.set(x, y, p);
+					}
+				}
+				g.updatePixels();
+			}
+
+			// Draw canvas
+			this._p5.image(g, rect.left, rect.top);
+			return;
+		}
 
 		for (let y = rect.top; y < rect.bottom; y++) {
 			const row = new Array(rect.width());
@@ -289,9 +344,10 @@ class GCanvas {
 	_blitRow(x, y, count, row) {
 			for (let i = 0; i < count; i++) {
 				let color = row[i];
-				this._getCanvas().stroke(color);
-				this._getCanvas().point(x+i, y);
+				// this._getCanvas().stroke(color);
+				this._getCanvas().set(x+i, y, color);
 			}
+		this._getCanvas().updatePixels();
 	}
 
 	save() {

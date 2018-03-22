@@ -18,22 +18,9 @@ function test2()  {
 		}
 	}
 
-	let filter = new GFilter();
-	filter.filter = function(outRow, inRow, count) {
-		for (let i = 0; i < count; i++) {
-			let color = inRow[i];
-			// Swap red and green
-			outRow[i] = canvas._p5.color(
-				canvas._p5.green(color),
-				canvas._p5.red(color),
-				canvas._p5.blue(color)
-			);
-		}
-	}
-
 	let paint = new GPaint();
 	paint.setShader(shader);
-	paint.setFilter(filter);
+	paint.setFilter(new RedGreenSwapFilter());
 
 	canvas.resetCtm();
 	canvas.translateCenter();
