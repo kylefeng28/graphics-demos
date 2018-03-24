@@ -69,7 +69,7 @@
 						<button aria-label="Stop executing" class="button is-danger" onclick="stopExecution()">
 							<i class="fas fa-stop"></i> &nbsp; Stop executing
 						</button>
-						<button aria-label="Clear" class="button is-danger" onclick="canvas.clear()">
+						<button aria-label="Clear" class="button is-danger" onclick="stopExecution(), canvas.clear()">
 							<i class="fas fa-times"></i> &nbsp; Clear
 						</button>
 					</div>

@@ -1,7 +1,7 @@
 'use strict';
 
 const example = `mandelShader = new MandelbrotShader();
-imgShader = new ImageShader("/matrix/img/spock.png");
+imgShader = new ImageShader("./img/spock.png");
 
 draw = async function() {
 	canvas.clear();
