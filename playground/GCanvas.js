@@ -13,7 +13,7 @@ class GRect {
 
 	static MakeXYWH(x, y, w, h) {
 		return new GRect(x, y, x+w, y+h);
-	} 
+	}
 
 	static MakeWH(w, h) {
 		return new GRect(0, 0, w, h);
@@ -29,7 +29,7 @@ class GRect {
 		this.pshader = pshader; // PShader, which contains a vertex shader and fragment shader
 	}
 
-	async use(canvas) { return; }
+	use(canvas) {}
 	bindTextures(canvas) {}
 }
 
@@ -46,7 +46,7 @@ class ImageShader extends GShader {
 		super(null);
 		let self = this;
 		self.promise = new Promise((resolve, reject) => {
-			self.img = canvas._p5.loadImage(imgLoc,
+			self.img = p.loadImage(imgLoc,
 				(img) => { resolve(img); },
 				(err) => { reject(err); });
 		});
@@ -104,14 +104,14 @@ class MandelbrotShader extends GShader {
 				z = vec2(z.x*z.x-z.y*z.y, 2.0*z.x*z.y) + c;
 			}
 			return vec4(0.5-cos(n*17.0)/2.0,0.5-cos(n*13.0)/2.0,0.5-cos(n*23.0)/2.0,1.0);
-		} 
+		}
 
 		void main() {
 			gl_FragColor = mandelbrot();
 		}
 		`;
 
-		const pshader = canvas._p5.createShader(vs, fs);
+		const pshader = p.createShader(vs, fs);
 
 		super(pshader);
 	}
@@ -120,9 +120,10 @@ class MandelbrotShader extends GShader {
 		canvas.shader(this.pshader);
 		this.pshader.setUniform('iResolution', [ canvas.width, canvas.height ]);
 		this.pshader.setUniform('p', [-0.74364388703, 0.13182590421]);
-		// this.pshader.setUniform('r', 1.5 * exp(-6.5 * (1 + sin(millis() / 2000))));
+		this.pshader.setUniform('r', 1.5 * p.exp(-6.5 * (1 + p.sin(p.millis() / 2000)))); // animated
 		// this.pshader.setUniform('r', 10 / (canvas.frameCount ** 2)); // animated
-		this.pshader.setUniform('r', 10 / (1000 ** 2));
+		// this.pshader.setUniform('r', 10 / (1000 ** 2)); // still
+		return true;
 	}
 }
 
@@ -156,7 +157,7 @@ class GCanvas {
 
 		const self = this;
 
-		this._p5 = new p5((p) => {
+		this._p = new p5((p) => {
 			/*
 			p.preload = () => {
 			}
@@ -169,7 +170,7 @@ class GCanvas {
 			};
 
 			p.draw = () => {
-				if (this.draw) { this.draw(); }
+				if (window.draw) { window.draw() }
 			};
 		});
 
@@ -208,7 +209,7 @@ class GCanvas {
 		this._getCanvas().vertex(rect.right, rect.top,    0, 1, 0);
 		this._getCanvas().vertex(rect.right, rect.bottom, 0, 1, 1);
 		this._getCanvas().vertex(rect.left,  rect.bottom, 0, 0, 1);
-		this._getCanvas().endShape();
+		this._getCanvas().endShape(p.CLOSE);
 
 		this._getCanvas().pop();
 	}
@@ -359,7 +360,7 @@ class GCanvas {
 			bounds = GRect.MakeXYWH(0, 0, this._getCanvas().width, this._getCanvas().height);
 		}
 
-		const c = this._p5.createGraphics(bounds.width(), bounds.height());
+		const c = this._getCanvas().createGraphics(bounds.width(), bounds.height());
 
 		// TODO wrap in a proper Layer object
 		const layer = {
@@ -383,7 +384,7 @@ class GCanvas {
 				break;
 		case 'layer':
 				const layer = this._layerStack.pop();
-				this._p5.image(layer.canvas, layer.x, layer.y);
+				this._getCanvas().image(layer.canvas, layer.x, layer.y);
 				break;
 		}
 	}
@@ -402,7 +403,7 @@ class GCanvas {
 	scale(sx, sy) { mat2d.scale(this._getCtm(), this._getCtm(), [sx, sy]); }
 
 	_applyMatrix() {
-		console.log('TODO!');
+		// console.log('TODO!');
 		// this._getCanvas().applyMatrix(...this._getCtm());
 	}
 
@@ -411,7 +412,7 @@ class GCanvas {
 	}
 
 	_getCanvas() {
-		return this._layerStack.length > 0 ? this._layerStack[this._layerStack.length-1].canvas : this._p5;
+		return this._layerStack.length > 0 ? this._layerStack[this._layerStack.length-1].canvas : this._p;
 	}
 
 	/* TODO

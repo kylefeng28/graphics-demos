@@ -64,4 +64,4 @@ canvas.onReady(function() {
 })
 */
 
-window.p = canvas._p5;
+window.p = canvas._p;
