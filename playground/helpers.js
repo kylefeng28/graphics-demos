@@ -6,6 +6,12 @@ function evalSelectionOrLine(editor) {
 	eval(code);
 }
 
+function evalAll(editor) {
+	// TODO: flash code
+	let code = editor.getValue();
+	eval(code);
+}
+
 function readFromLocalStorage(editor) {
 	var data = localStorage.getItem('editor_contents');
 	if (data) {
@@ -17,8 +23,16 @@ function readFromLocalStorage(editor) {
 	}
 }
 
+function loadExample(editor, example) {
+	editor.setValue(example, -1); // Replace everything
+}
+
 function saveToLocalStorage(editor) {
 	console.log('Saving...');
 	var data = editor.getValue();
 	localStorage.setItem('editor_contents', data);
+}
+
+function stopExecution() {
+	delete window.draw;
 }
