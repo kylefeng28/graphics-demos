@@ -49,20 +49,65 @@
 		<section class="section">
 			<div class="container">
 				<h1 class="title">
-					Graphics playground
+					Graphics Playground
 				</h1>
+
+				<div id="intro" class="content">
+					<p>This is a place where you can write and test graphics code without leaving your browser.</p>
+					<p>This page uses the power and speed of <a href="https://p5js.org/">P5.js</a> and WebGL shaders. Many of the classes and methods are inspired by the Skia graphics library, with similar naming conventions (e.g. SkRect becomes GRect). Check the example to see how to use the library.</p>
+
+					<p>Currently implemented methods:</p>
+					<ul>
+						<li>class GRect</li>
+						<li><ul>
+							<li>GRect(left, top, right, bottom) <em>constructor</em></li>
+							<li>MakeXYWH(x, y, width, height) <em>factory</em></li>
+							<li>MakeWH(width, height) <em>factory</em></li>
+						</ul></li>
+
+						<li>class ImageShader</li>
+						<li><ul>
+							<li>ImageShader(String imgLocation) <em>constructor</em></li>
+						</ul></li>
+
+						<li>class MandelbrotShader: Animated Mandelbrot shader</li>
+						<li><ul>
+							<li>MandelbrotShader <em>constructor</em></li>
+						</ul></li>
+
+						<li>class GPaint</li>
+						<li><ul>
+							<li>GPaint(String color)<em>constructor</em></li>
+							<li>GPaint(GShader shader)<em>constructor</em></li>
+						</ul></li>
+
+						<li>class GCanvas</li>
+						<li><ul>
+							<li>clear()</li>
+							<li>drawRect(GRect rect, GPaint paint)</li>
+						</ul></li>
+					</ul>
+				</div>
+
+				<br/>
 
 				<div id="code">
 					<div>
-						<button aria-label="Save" class="button" onclick="saveToLocalStorage(editor)">
-							<i class="fas fa-download"></i> &nbsp; Save
+						<button aria-label="Save code" class="button" onclick="saveToLocalStorage(editor)">
+							<i class="fas fa-download"></i> &nbsp; Save code
 						</button>
-						<button aria-label="Load" class="button" onclick="readFromLocalStorage(editor)">
-							<i class="fas fa-upload"></i> &nbsp; Load
+						<button aria-label="Load code" class="button" onclick="readFromLocalStorage(editor)">
+							<i class="fas fa-upload"></i> &nbsp; Load code
 						</button>
 						<button aria-label="Load example" class="button" onclick="loadExample(editor, example)">
 							Load example
 						</button>
+						<button aria-label="Save as PNG" class="button" onclick="canvas._p.save()">
+							Save as PNG
+						</button>
+					</div>
+
+					<div>
 						<button aria-label="Run code" class="button is-primary" onclick="evalAll(editor)">
 							<i class="fas fa-play"></i> &nbsp; Run code
 						</button>
