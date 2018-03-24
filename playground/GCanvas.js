@@ -26,8 +26,11 @@ class GRect {
 
 /*abstract*/ class GShader {
 	constructor(pshader) {
-		this.pshader = pshader;
+		this.pshader = pshader; // PShader, which contains a vertex shader and fragment shader
 	}
+
+	async use(canvas) { return; }
+	bindTextures(canvas) {}
 }
 
 /*abstract*/ class GFilter {
@@ -37,14 +40,23 @@ class GRect {
 }
 
 // Not a real shader, as in it doesn't use OpenGL or a PShader
-class TextureShader extends GShader {
+// TODO: local transformation matrix
+class ImageShader extends GShader {
 	constructor(imgLoc) {
 		super(null);
-		this.img = canvas._p5.loadImage(imgLoc);
+		let self = this;
+		self.promise = new Promise((resolve, reject) => {
+			self.img = canvas._p5.loadImage(imgLoc,
+				(img) => { resolve(img); },
+				(err) => { reject(err); });
+		});
 	}
 
 	use(canvas) {
-		console.log(canvas);
+		return this.promise;
+	}
+
+	bindTextures(canvas) {
 		canvas.texture(this.img);
 	}
 }
@@ -163,11 +175,11 @@ class GCanvas {
 
 	}
 
-	drawPaint(paint) {
+	async drawPaint(paint) {
 		// TODO
 	}
 
-	drawRect(rect, paint) {
+	async drawRect(rect, paint) {
 		const color = paint.color;
 		const shader = paint.shader;
 		const filter = paint.filter;
@@ -178,7 +190,7 @@ class GCanvas {
 		this._getCanvas().translate(-this._getCanvas().width/2, -this._getCanvas().height/2);
 
 		if (shader) {
-			shader.use(this._getCanvas());
+				await shader.use(this._getCanvas());
 		} else {
 			this._getCanvas().fill(color);
 		}
@@ -187,10 +199,15 @@ class GCanvas {
 
 		this._getCanvas().noStroke();
 		this._getCanvas().beginShape();
-		this._getCanvas().vertex(rect.left, rect.top, 0)
-		this._getCanvas().vertex(rect.right, rect.top, 0)
-		this._getCanvas().vertex(rect.right, rect.bottom, 0)
-		this._getCanvas().vertex(rect.left, rect.bottom, 0)
+
+		if (shader) {
+			shader.bindTextures(this._getCanvas()); // must be after beginShape and before vertex calls
+		}
+
+		this._getCanvas().vertex(rect.left,  rect.top,    0, 0, 0);
+		this._getCanvas().vertex(rect.right, rect.top,    0, 1, 0);
+		this._getCanvas().vertex(rect.right, rect.bottom, 0, 1, 1);
+		this._getCanvas().vertex(rect.left,  rect.bottom, 0, 0, 1);
 		this._getCanvas().endShape();
 
 		this._getCanvas().pop();
